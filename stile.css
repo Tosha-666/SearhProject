@@ -1,0 +1,22 @@
+body{
+    background-color:  #E5E5E5;
+
+}
+.main{
+    width: 661px;
+    height: 763px;
+    background-color:  #C4C4C4;
+    margin: 100px auto;
+    padding-top: 60px;
+
+}
+#searchValue{
+    margin: 60px auto;
+    width: 500px;
+    height: 60px;
+    display: block;
+    font-weight: 400;
+    font-size: 40px;
+    padding: 10px;
+    box-sizing: border-box;
+}
