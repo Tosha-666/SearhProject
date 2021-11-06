@@ -3024,8 +3024,43 @@ xhr.send()
 const buttonSend = document.querySelector('.send-btn')
 buttonSend.addEventListener('click', get)
 */
+/*
 fetch("https://jsonplaceholder.typicode.com/posts")
   .then(response => {
     return(response.json())
   })
   .then(posts=>console.log(posts))
+  */
+const repoList = document.querySelector('repo-list')
+
+const createList = function (item) {
+  const userRepo = document.createElement('li', 'repo-item')
+  userRepo.innerHTML = item.name
+  console.log(userRepo);
+  repoList.append(userRepo)
+};
+
+ const searchRepo = async function () {
+  return await fetch(`https://api.github.com/search/repositories?q=${searchResults.value}`, {
+  }).then(response => {
+    if (response.ok) {
+      response.json()
+        .then(response => {
+          response.forEach(element => {
+            createList(element)
+          });
+        })
+    } else {
+      
+    }
+  }
+    )
+}
+
+
+
+// const fragment = document.createDocumentFragment()
+const searchResults = document.querySelector('#searchValue')
+searchResults.addEventListener('keyup', searchRepo)
+
+

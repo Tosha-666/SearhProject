@@ -7,8 +7,8 @@ body{
     height: 763px;
     background-color:  #C4C4C4;
     margin: 100px auto;
-    padding-top: 60px;
-
+    padding-top: 1px;
+    position: relative;
 }
 #searchValue{
     margin: 60px auto;
@@ -19,4 +19,5 @@ body{
     font-size: 40px;
     padding: 10px;
     box-sizing: border-box;
+    
 }
