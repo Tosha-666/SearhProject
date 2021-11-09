@@ -3031,36 +3031,117 @@ fetch("https://jsonplaceholder.typicode.com/posts")
   })
   .then(posts=>console.log(posts))
   */
-const repoList = document.querySelector('repo-list')
+const repoList = document.querySelector('.repo-list')
+const arrOfUserItems =[]
 
 const createList = function (item) {
-  const userRepo = document.createElement('li', 'repo-item')
-  userRepo.innerHTML = item.name
-  console.log(userRepo);
+
+  arrOfUserItems.push(item)
+  const userRepo = document.createElement('li')
+  userRepo.id = `${item.name}`
+  // userRepo.setAttribute('data-name',`${item.name}`)
+  userRepo.classList.add('userRepoItem')
+  userRepo.innerHTML = `${item.name}`
   repoList.append(userRepo)
 };
 
- const searchRepo = async function () {
-  return await fetch(`https://api.github.com/search/repositories?q=${searchResults.value}`, {
-  }).then(response => {
+
+
+
+
+const debounce = (fn, debounceTime) => {
+  let timeout
+    return function () {
+      const fnCall =()=> {
+        fn.apply(this, arguments)
+      }
+      clearTimeout(timeout)
+      timeout = setTimeout(fnCall, debounceTime) 
+    }
+}
+  
+const searchRepo = async function () {
+  if (searchResults.value) {
+    return await fetch(`https://api.github.com/search/repositories?q=${searchResults.value}&per_page=5&page=1`, {
+    }).then(response => {
+    
     if (response.ok) {
-      response.json()
-        .then(response => {
-          response.forEach(element => {
+
+      response.json().then(response => {
+        console.log(response);
+        arrOfUserItems.length=0
+        repoList.innerHTML=''
+        response.items.forEach(element => {
             createList(element)
           });
         })
     } else {
-      
+      // Сообщение об ошибке
     }
   }
     )
+  }
+  else {
+    repoList.innerHTML=''
+  }
 }
 
+const getValue = function (el,arr) {
+  for (let i = 0; i<arr.length; i++) {
+    if (arr[i].name == el) {
+      console.log(arr[i]);
+        return arr[i]
+      }
+  }
+}
+
+const createElemRepo = function (item) {
+  const repoAddedList = document.querySelector('.repo-added__list')
+  const repoAddedItem = document.createElement('div')
+  repoAddedItem.classList.add('repo-added__item')
+  const repoAddedItemTagName = document.createElement('p')
+  repoAddedItemTagName.classList.add('repo-added__item--tag')
+  repoAddedItemTagName.innerHTML = `Name:${item.name}`
+  repoAddedItem.append(repoAddedItemTagName)
+  const repoAddedItemTagOwners = document.createElement('p')
+  repoAddedItemTagOwners.classList.add('repo-added__item--tag')
+  repoAddedItemTagOwners.innerHTML = `Owner:${item.name}`
+  repoAddedItem.append(repoAddedItemTagOwners)
+  const repoAddedItemTagStars = document.createElement('p')
+  repoAddedItemTagStars.classList.add('repo-added__item--tag')
+  repoAddedItemTagStars.innerHTML = `Stars:${item.name}`
+  repoAddedItem.append(repoAddedItemTagOwners)
+
+  repoAddedList.append(repoAddedItem)
+
+  
+
+
+};
+
+const addRepo = function (event) {
+  let LI = event.target.closest('li')
+  if (!LI) {
+    return
+  } else {
+  const selectedItem = LI.id
+  const selectedData = getValue(selectedItem, arrOfUserItems)
+  createElemRepo(selectedData)
+  }
+  
+  }
+  
+  //  console.log(event.target.dataset.name);
+  
+
+
+
+
+
+repoList.addEventListener('click', addRepo)
 
 
 // const fragment = document.createDocumentFragment()
 const searchResults = document.querySelector('#searchValue')
-searchResults.addEventListener('keyup', searchRepo)
-
+searchResults.addEventListener('keyup', debounce(searchRepo,300) )
 
